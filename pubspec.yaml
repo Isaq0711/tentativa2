@@ -1,0 +1,32 @@
+name: tentativa_2
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.5
+  path_provider: ^2.0.8
+  image_picker: ^0.8.4+4
+  firebase_core: ^2.13.0
+  firebase_auth: ^4.6.0
+  firebase_storage: ^11.2.1
+  cloud_firestore: ^4.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Quicksand
+      fonts:
+        - asset: fonts/Quicksand-Regular.ttf
