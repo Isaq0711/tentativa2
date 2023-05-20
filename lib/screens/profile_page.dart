@@ -3,24 +3,34 @@ import 'package:tentativa_2/app_theme.dart';
 import 'package:tentativa_2/bars/bottom_nav_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tentativa_2/user_data.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String username; // Adiciona o campo username
+  final String username;
+  final String photoURL; // Add the photoURL field
 
-  const ProfileScreen({Key? key, required this.username}) : super(key: key);
+  const ProfileScreen({Key? key, required this.username, required this.photoURL}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  UserData _userData = UserData(userId: '', username: '', photoURL: '');
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfileData(_userData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '',
-          style: TextStyle(color: AppTheme.nearlyWhite),
+          "Meu perfil",
+          style: AppTheme.titlewhite,
         ),
         centerTitle: true,
         backgroundColor: AppTheme.vinho,
@@ -31,14 +41,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(
-                  'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'),
+              backgroundImage: NetworkImage(widget.photoURL), // Access the photoURL value through the widget
             ),
             SizedBox(height: 20),
             Text(
-              "Meu perfil",
-              style: AppTheme.headline,
-            ),
+          widget.username, // Acessa o valor de username através do widget
+          style: AppTheme.headline
+        ),
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

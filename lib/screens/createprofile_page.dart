@@ -119,12 +119,14 @@ class _CreateProfilePageState extends State<CreateProfilePage> {
                         });
                         try {
                           // Salvar os dados do perfil no Firestore sem foto
+                          final photoURL = _photoURL ?? 'URL da Foto Genérica';
+
                           await FirebaseFirestore.instance
                               .collection('profiles')
                               .doc(widget.userId)
                               .set({
                             'username': _usernameController.text,
-                            'photoURL': null,
+                            'photoURL': photoURL,
                           });
 
                           setState(() {

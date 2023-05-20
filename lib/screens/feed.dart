@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tentativa_2/bars/bottom_nav_bar.dart';
+import '../bars/bottom_nav_bar.dart';
 import 'package:tentativa_2/app_theme.dart';
 
 import '../bars/configuration_bar.dart';
