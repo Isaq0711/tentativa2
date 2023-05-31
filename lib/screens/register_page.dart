@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tentativa_2/app_theme.dart';
-import 'package:tentativa_2/screens/createprofile_page.dart';
-import 'package:tentativa_2/screens/feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tentativa_2/app_theme.dart';
+import 'package:tentativa_2/screens/feed.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback onRegisterSuccess;
@@ -18,13 +17,13 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -72,6 +71,20 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     SizedBox(height: 16),
+                    TextFormField(
+                      controller: _idController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, insira um ID';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'ID',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
@@ -86,21 +99,17 @@ class _RegisterPageState extends State<RegisterPage> {
                               password: _passwordController.text,
                             );
 
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(userCredential.user!.uid)
-                                .set({'id': null});
+                            final userId = userCredential.user!.uid;
 
-                            setState(() {
-                              _isLoading = false;
+                            await FirebaseFirestore.instance
+                                .collection('profiles')
+                                .doc(userId)
+                                .set({
+                              'email': _emailController.text,
+                              'id': _idController.text,
                             });
+
                             widget.onRegisterSuccess();
-                           Navigator.pushReplacement(
-                              context,
-                           MaterialPageRoute(
-                          builder: (context) => CreateProfilePage(userId: userCredential.user!.uid),
-                          ),
-                          );
                           } on FirebaseAuthException catch (e) {
                             setState(() {
                               _isLoading = false;

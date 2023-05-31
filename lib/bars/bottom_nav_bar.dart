@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tentativa_2/app_theme.dart';
 import 'package:tentativa_2/screens/feed.dart';
 import '../screens/profile_page.dart';
-import 'package:tentativa_2/user_data.dart';
+import 'package:tentativa_2/user/user_data.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -16,12 +16,21 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
-  UserData _userData = UserData(userId: '', username: '', photoURL: '');
+  UserData _userData = UserData(userId: '', username: '');
 
   @override
   void initState() {
     super.initState();
-    fetchProfileData(_userData);
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      _userData = await currentUser();
+    } catch (e) {
+      // Tratar o erro, se necessário
+      print('Erro ao obter os dados do usuário: $e');
+    }
   }
 
   Future<void> _onItemTapped(int index) async {
@@ -30,7 +39,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       if (_selectedIndex == 2) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfileScreen(username: _userData.username, photoURL: _userData.photoURL)), 
+          MaterialPageRoute(builder: (context) => ProfileScreen(username: _userData.username)), 
         );
       } else if (_selectedIndex == 1) {
         _showImageSourceDialog();
@@ -127,7 +136,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfileScreen(username: _userData.username,photoURL: _userData.photoURL), 
+                  builder: (context) => ProfileScreen(username: _userData.username), 
                 ),
               );
             },

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../bars/bottom_nav_bar.dart';
 import 'package:tentativa_2/app_theme.dart';
-
+import '../bars/appbar.dart';
 import '../bars/configuration_bar.dart';
+import 'package:tentativa_2/search.dart';
+
 
 class FeedPage extends StatefulWidget {
   @override
@@ -11,56 +13,42 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   TextEditingController _searchController = TextEditingController();
-  List<Postagem> postagens = [    Postagem(        imagem: 'https://picsum.photos/200/300',        likes: 10, dislikes: 2,        comentarios: 2),    Postagem(        imagem: 'https://picsum.photos/200/300',        likes: 20, dislikes: 7,       comentarios: 3),    Postagem(        imagem: 'https://picsum.photos/200/300',        likes: 30, dislikes: 10,       comentarios: 4),  ];
+  List<Postagem> postagens = [
+    Postagem(
+      imagem: 'https://picsum.photos/200/300',
+      likes: 10,
+      dislikes: 2,
+      comentarios: 2,
+    ),
+    Postagem(
+      imagem: 'https://picsum.photos/200/300',
+      likes: 20,
+      dislikes: 7,
+      comentarios: 3,
+    ),
+    Postagem(
+      imagem: 'https://picsum.photos/200/300',
+      likes: 30,
+      dislikes: 10,
+      comentarios: 4,
+    ),
+  ];
+
+  void handleSearch(String query) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Search(query: query),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'DRESSME',
       home: Scaffold(
-             appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(width: 10),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.nearlyWhite,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Pesquisar...',
-                      border: InputBorder.none,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: AppTheme.darkText,
-                      ),
-                      suffixIcon: Icon(
-                        Icons.camera_alt_rounded,
-                        color: AppTheme.darkText,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 20),
-            ],
-          ),
-          centerTitle: true,
-          backgroundColor: AppTheme.vinho,
-          actions: [
-            IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ConfigPage()));
-
-              },
-            ),
-          ],
-        ),
+        appBar: MyAppBar(),
         body: ListView.builder(
           itemCount: postagens.length,
           itemBuilder: (context, index) {
@@ -81,8 +69,7 @@ class _FeedPageState extends State<FeedPage> {
                             });
                           },
                         ),
-                        Text('${postagens[index].likes} likes',style: AppTheme.body1),
-                       ////////////////////
+                        Text('${postagens[index].likes} likes', style: AppTheme.body1),
                         IconButton(
                           icon: Icon(Icons.thumb_down),
                           onPressed: () {
@@ -91,16 +78,14 @@ class _FeedPageState extends State<FeedPage> {
                             });
                           },
                         ),
-                      
                         Text('${postagens[index].dislikes} dislikes', style: AppTheme.body1),
-
                         IconButton(
                           icon: Icon(Icons.comment),
                           onPressed: () {
                             // Ação do botão de comentar
                           },
                         ),
-                        Text('${postagens[index].comentarios} comentários',style: AppTheme.body1),
+                        Text('${postagens[index].comentarios} comentários', style: AppTheme.body1),
                       ],
                     ),
                   ],
@@ -109,7 +94,7 @@ class _FeedPageState extends State<FeedPage> {
             );
           },
         ),
-    bottomNavigationBar: BottomNavBar(),
+        bottomNavigationBar: BottomNavBar(),
       ),
     );
   }
@@ -121,5 +106,5 @@ class Postagem {
   int dislikes;
   final int comentarios;
 
-  Postagem({required this.imagem, required this.likes,required this.dislikes, required this.comentarios});
+  Postagem({required this.imagem, required this.likes, required this.dislikes, required this.comentarios});
 }

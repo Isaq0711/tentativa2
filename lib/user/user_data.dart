@@ -4,24 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserData {
   late String userId;
   late String username;
-  late String photoURL;
 
-   UserData({required this.userId, required this.username, String? photoURL}) {
-    this.photoURL = photoURL ?? 'URL da Foto do Perfil';
-  }
-
+  UserData({required this.userId, required this.username});
 
   factory UserData.fromDocument(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
     final userId = snapshot.id;
     final username = data["username"] ?? "";
-    final photoURL = data["photoURL"];
-    return UserData(userId: userId, username: username, photoURL: photoURL);
+    return UserData(userId: userId, username: username);
   }
 }
 
-Future<void> fetchProfileData(UserData userData) async {
+Future<UserData> currentUser() async {
   final user = FirebaseAuth.instance.currentUser;
+  
   if (user != null) {
     final userId = user.uid;
 
@@ -32,11 +28,12 @@ Future<void> fetchProfileData(UserData userData) async {
 
     if (profileSnapshot.exists) {
       final profileData = profileSnapshot.data() as Map<String, dynamic>;
-      userData.username = profileData['username'];
-      userData.photoURL = profileData['photoURL'];
+      final username = profileData['id'];
+      return UserData(userId: userId, username: username);
     } else {
-      userData.username = 'Nome de Usuário';
-      userData.photoURL = 'URL da Foto do Perfil';
+      return UserData(userId: userId, username: 'Nome de Usuário');
     }
   }
+
+  throw Exception('Usuário não autenticado');
 }
